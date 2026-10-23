@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #070411;
+  --foreground: #f8f5ff;
+  --muted: #a9a0bd;
+  --violet: #a342ff;
+  --violet-bright: #c34cff;
+  --blue: #158cff;
 }
 
 @theme inline {
@@ -12,15 +16,580 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
 }
 
 body {
+  margin: 0;
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.novara-shell {
+  position: relative;
+  display: flex;
+  height: 100dvh;
+  min-height: 480px;
+  flex-direction: column;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 43%, rgb(63 14 99 / 27%) 0%, transparent 48%),
+    radial-gradient(ellipse at 50% 100%, rgb(16 8 41 / 40%) 0%, transparent 58%),
+    #070411;
+}
+
+.novara-navbar {
+  z-index: 2;
+  display: flex;
+  min-height: 76px;
+  align-items: center;
+  flex: none;
+  margin: 18px 3% 0;
+  padding: 10px 20px;
+  border: 1px solid rgb(190 106 255 / 15%);
+  border-radius: 24px;
+  background: linear-gradient(110deg, rgb(27 12 44 / 72%), rgb(18 9 33 / 48%));
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 3%), 0 12px 45px rgb(0 0 0 / 12%);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+
+.novara-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.novara-brand-name,
+.novara-brand-tagline {
+  margin: 0;
+}
+
+.novara-brand-name {
+  font-size: 23px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+
+.novara-brand-tagline {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.novara-orb {
+  position: relative;
+  width: 124px;
+  aspect-ratio: 1;
+  flex: none;
+  border: 1px solid rgb(230 174 255 / 84%);
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse at 29% 16%, rgb(255 226 255 / 97%) 0%, rgb(255 102 250 / 76%) 7%, transparent 30%),
+    radial-gradient(ellipse at 37% 25%, rgb(193 53 255 / 92%) 0%, rgb(106 31 222 / 77%) 28%, transparent 60%),
+    radial-gradient(ellipse at 75% 83%, rgb(0 155 255 / 95%) 0%, rgb(34 60 229 / 62%) 25%, transparent 51%),
+    radial-gradient(circle at 50% 47%, #1d0e43 0%, #100724 55%, #080416 74%);
+  box-shadow:
+    0 0 16px 3px rgb(191 68 255 / 65%),
+    0 0 42px 12px rgb(137 34 255 / 46%),
+    0 0 82px 20px rgb(93 32 205 / 26%),
+    inset 2px 3px 9px rgb(255 216 255 / 72%),
+    inset -4px -5px 12px rgb(36 137 255 / 90%);
+  animation: novara-orb-breathe 5s ease-in-out infinite;
+}
+
+.novara-orb::before,
+.novara-orb::after,
+.novara-orb-inner {
+  position: absolute;
+  inset: 6%;
+  border: 1px solid rgb(231 177 255 / 30%);
+  border-radius: 50%;
+  content: "";
+}
+
+.novara-orb::before {
+  transform: rotate(-33deg) scaleX(0.56);
+  background: linear-gradient(125deg, rgb(246 164 255 / 22%), transparent 53%);
+}
+
+.novara-orb::after {
+  inset: 11% 5% 3% 20%;
+  border-color: rgb(107 119 255 / 34%);
+  transform: rotate(41deg) scaleX(0.66);
+}
+
+.novara-orb-inner {
+  inset: 2%;
+  border-color: rgb(255 255 255 / 27%);
+  background: radial-gradient(ellipse at 30% 12%, rgb(255 255 255 / 30%), transparent 29%);
+}
+
+.novara-orb-small {
+  width: 42px;
+  box-shadow:
+    0 0 9px 2px rgb(191 68 255 / 64%),
+    0 0 22px 5px rgb(137 34 255 / 34%),
+    inset 1px 2px 5px rgb(255 216 255 / 68%),
+    inset -2px -3px 7px rgb(36 137 255 / 84%);
+}
+
+.novara-orb-small::before,
+.novara-orb-small::after,
+.novara-orb-small .novara-orb-inner {
+  border-width: 0.5px;
+}
+
+.novara-content {
+  position: relative;
+  min-height: 0;
+  flex: 1;
+}
+
+.novara-content.is-chat-active {
+  display: flex;
+  flex-direction: column;
+}
+
+.novara-welcome {
+  position: absolute;
+  top: 43%;
+  left: 50%;
+  display: flex;
+  width: min(90%, 720px);
+  flex-direction: column;
+  align-items: center;
+  transform: translate(-50%, -50%);
+  animation: novara-fade-up 550ms ease both;
+}
+
+.novara-welcome h1 {
+  margin: 43px 0 0;
+  font-size: clamp(30px, 4.5vw, 38px);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  text-align: center;
+}
+
+.novara-welcome h1 span {
+  color: #b64bff;
+  text-shadow: 0 0 28px rgb(174 61 255 / 48%);
+}
+
+.novara-welcome > p {
+  margin: 13px 0 0;
+  color: #b4abc9;
+  font-size: clamp(16px, 2.5vw, 22px);
+  text-align: center;
+}
+
+.novara-composer {
+  z-index: 2;
+  display: flex;
+  height: 76px;
+  flex: none;
+  align-items: center;
+  gap: 16px;
+  padding: 0 16px 0 24px;
+  border: 1px solid rgb(182 73 255 / 88%);
+  border-radius: 999px;
+  background:
+    linear-gradient(105deg, rgb(63 31 82 / 66%), rgb(28 20 53 / 70%)),
+    rgb(27 18 43 / 76%);
+  box-shadow:
+    0 0 30px rgb(135 38 222 / 19%),
+    inset 0 1px 0 rgb(255 255 255 / 10%);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  transition:
+    width 450ms ease,
+    bottom 450ms ease,
+    transform 450ms ease,
+    border-radius 450ms ease,
+    background 300ms ease;
+}
+
+.novara-composer > svg {
+  width: 25px;
+  height: 25px;
+  flex: none;
+  color: #b943ff;
+  filter: drop-shadow(0 0 9px rgb(181 64 255 / 60%));
+}
+
+.novara-composer input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #fbf8ff;
+  font-size: 17px;
+}
+
+.novara-composer input::placeholder {
+  color: #9589ac;
+  opacity: 1;
+}
+
+.novara-composer-divider {
+  width: 1px;
+  height: 24px;
+  flex: none;
+  background: rgb(196 176 224 / 50%);
+}
+
+.novara-composer-hint {
+  flex: none;
+  color: #9286a8;
+  font-size: 16px;
+}
+
+.novara-composer button {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  flex: none;
+  place-items: center;
+  border: 1px solid rgb(255 255 255 / 22%);
+  border-radius: 50%;
+  background: linear-gradient(145deg, #c247ff, #8018dc);
+  color: white;
+  box-shadow: 0 0 24px rgb(169 54 255 / 46%), inset 0 1px 0 rgb(255 255 255 / 28%);
+  cursor: pointer;
+  transition: opacity 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.novara-composer button svg {
+  width: 24px;
+  height: 24px;
+}
+
+.novara-composer button:not(:disabled):hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 32px rgb(169 54 255 / 70%), inset 0 1px 0 rgb(255 255 255 / 28%);
+}
+
+.novara-composer button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.novara-composer.is-centered {
+  position: absolute;
+  top: 68%;
+  left: 50%;
+  width: min(84%, 900px);
+  transform: translate(-50%, -50%);
+}
+
+.novara-composer.is-docked {
+  width: 100%;
+  max-width: 900px;
+  height: 64px;
+  margin: 0 auto 16px;
+  padding: 0 12px 0 20px;
+  border-radius: 22px;
+}
+
+.novara-conversation {
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 24px 20px;
+  scrollbar-color: rgb(162 77 216 / 45%) transparent;
+  scrollbar-width: thin;
+}
+
+.novara-messages {
+  display: flex;
+  width: 100%;
+  max-width: 860px;
+  flex-direction: column;
+  gap: 26px;
+  margin: 0 auto;
+}
+
+.novara-message {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: novara-message-in 400ms ease both;
+}
+
+.novara-question {
+  max-width: min(80%, 680px);
+  align-self: flex-end;
+  padding: 13px 18px;
+  border: 1px solid rgb(193 105 255 / 38%);
+  border-radius: 22px 22px 6px 22px;
+  background: linear-gradient(135deg, rgb(108 48 148 / 43%), rgb(51 31 83 / 54%));
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 7%);
+  color: #f8f3ff;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.novara-answer {
+  min-width: 0;
+  padding: 18px 22px;
+  border: 1px solid rgb(185 112 238 / 17%);
+  border-radius: 22px;
+  background: linear-gradient(145deg, rgb(32 20 52 / 72%), rgb(19 15 36 / 63%));
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 4%), 0 14px 40px rgb(0 0 0 / 10%);
+  color: #e9e2f3;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.novara-answer > :first-child {
+  margin-top: 0;
+}
+
+.novara-answer > :last-child {
+  margin-bottom: 0;
+}
+
+.novara-answer a {
+  color: #ca83ff;
+}
+
+.novara-answer pre {
+  overflow-x: auto;
+  border: 1px solid rgb(193 105 255 / 19%);
+  border-radius: 12px;
+  background: rgb(8 5 17 / 70%);
+  padding: 16px;
+}
+
+.novara-thinking {
+  position: relative;
+  display: flex;
+  width: 256px;
+  align-items: center;
+  gap: 13px;
+  padding: 16px;
+  border: 1px solid rgb(185 112 238 / 20%);
+  border-radius: 18px;
+  background: rgb(32 20 52 / 52%);
+  animation: novara-pulse 1.6s ease-in-out infinite;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.novara-thinking-avatar {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  flex: none;
+  place-items: center;
+}
+
+.novara-thinking-lines {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.novara-thinking-lines span {
+  height: 10px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, rgb(175 79 231 / 45%), rgb(114 86 159 / 35%));
+}
+
+.novara-thinking-lines span:first-child {
+  width: 60%;
+}
+
+.novara-thinking-lines span:last-child {
+  width: 90%;
+}
+
+.novara-thinking-indicator {
+  position: absolute;
+  right: 14px;
+  bottom: 13px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #c055ff;
+  box-shadow: 0 0 12px #b343ff;
+}
+
+.novara-error {
+  margin: 0;
+  color: #ff9dad;
+}
+
+@keyframes novara-orb-breathe {
+  0%,
+  100% {
+    filter: saturate(1);
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    filter: saturate(1.2);
+    transform: translateY(-5px) scale(1.025);
+  }
+}
+
+@keyframes novara-fade-up {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 12px));
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes novara-message-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes novara-pulse {
+  0%,
+  100% {
+    opacity: 0.72;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .novara-shell {
+    min-height: 440px;
+  }
+
+  .novara-navbar {
+    min-height: 68px;
+    margin: 14px 14px 0;
+    padding: 9px 14px;
+    border-radius: 19px;
+  }
+
+  .novara-brand {
+    gap: 13px;
+  }
+
+  .novara-brand-name {
+    font-size: 20px;
+  }
+
+  .novara-brand-tagline {
+    font-size: 12px;
+  }
+
+  .novara-orb-small {
+    width: 38px;
+  }
+
+  .novara-orb:not(.novara-orb-small) {
+    width: 102px;
+  }
+
+  .novara-welcome {
+    top: 39%;
+  }
+
+  .novara-welcome h1 {
+    margin-top: 32px;
+  }
+
+  .novara-composer {
+    height: 66px;
+    gap: 11px;
+    padding: 0 10px 0 17px;
+  }
+
+  .novara-composer.is-centered {
+    top: 65%;
+    width: calc(100% - 32px);
+  }
+
+  .novara-composer > svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .novara-composer input {
+    font-size: 15px;
+  }
+
+  .novara-composer-divider,
+  .novara-composer-hint {
+    display: none;
+  }
+
+  .novara-composer button {
+    width: 42px;
+    height: 42px;
+  }
+
+  .novara-composer.is-docked {
+    height: 58px;
+    margin-bottom: 10px;
+    padding-left: 14px;
+    border-radius: 19px;
+  }
+
+  .novara-conversation {
+    padding: 18px 16px 14px;
+  }
+
+  .novara-question {
+    max-width: 92%;
+    padding: 13px 16px;
+  }
+
+  .novara-answer {
+    padding: 17px;
+  }
+}
+
+@media (max-height: 700px) {
+  .novara-welcome {
+    top: 36%;
+  }
+
+  .novara-composer.is-centered {
+    top: 82%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
